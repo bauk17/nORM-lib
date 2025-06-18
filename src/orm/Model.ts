@@ -1,4 +1,5 @@
 import { DatabaseWrapper } from "../db/Database";
+import { query, QueryBuilder } from "../db/QueryBuilder";
 
 export class Model {
   static tableName: string;
@@ -20,14 +21,10 @@ export class Model {
   }
 
   static find(where: Record<string, any>) {
-    const keys = Object.keys(where);
-    const conditions = keys.map((k) => `${k} = ?`).join(" AND");
+    const qb = new QueryBuilder(this.tableName);
+    qb.select().where(where);
 
-    const sql = keys.length
-      ? `SELECT * FROM ${this.tableName} WHERE ${conditions}`
-      : `SELECT * FROM ${this.tableName}`;
-
-    const values = Object.values(where);
+    const { sql, values } = qb.build();
 
     return this.db.all(sql, values);
   }
