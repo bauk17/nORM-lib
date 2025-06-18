@@ -5,13 +5,13 @@ import { User } from "./models/User";
 const database = new DatabaseWrapper("testingOrm.db");
 User.setDatabase(database);
 
-database.run(`
-  CREATE TABLE IF NOT EXISTS testing (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
-    email TEXT UNIQUE
-  )
-`);
+const testing = database.define("testingOrm", {
+  id: "INTEGER PRIMARY KEY AUTOINCREMENT",
+  name: "TEXT",
+  email: "TEXT",
+  age: "INTEGER",
+  createdAt: "DATETIME DEFAULT CURRENT_TIMESTAMP",
+});
 
 const users = User.find({ name: "John Doe" });
 console.log(users);
