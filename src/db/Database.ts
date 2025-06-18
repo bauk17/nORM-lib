@@ -26,4 +26,19 @@ export class DatabaseWrapper {
   close() {
     this.db.close();
   }
+
+  define(tableName: string, columns: Record<string, any>) {
+    const columnsName = Object.keys(columns);
+    const columnsValues = Object.values(columns);
+
+    const columnsDefinition = columnsName
+      .map((name, index) => {
+        const type = columnsValues[index];
+        return `${name} ${type}`;
+      })
+      .join(", ");
+
+    this.run(`CREATE TABLE IF NOT EXISTS ${tableName} (${columnsDefinition})`);
+    return this;
+  }
 }
