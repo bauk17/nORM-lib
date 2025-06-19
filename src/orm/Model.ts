@@ -2,14 +2,15 @@ import { DatabaseWrapper } from "../db/Database";
 import { query, QueryBuilder } from "../db/QueryBuilder";
 
 export class Model {
-  static tableName: string;
-  static db: DatabaseWrapper;
+  private tableName: string;
+  private db: DatabaseWrapper;
 
-  static setDatabase(database: DatabaseWrapper) {
-    this.db = database;
+  constructor(tableName: string, db: DatabaseWrapper) {
+    this.tableName = tableName;
+    this.db = db;
   }
 
-  static async create(data: Record<string, any>) {
+  create(data: Record<string, any>) {
     const keys = Object.keys(data);
     const values = Object.values(data);
     const placeholders = keys.map(() => "?").join(", ");
@@ -20,7 +21,7 @@ export class Model {
     this.db.run(sql, values);
   }
 
-  static find(where: Record<string, any>) {
+  find(where: Record<string, any>) {
     const qb = new QueryBuilder(this.tableName);
     qb.select().where(where);
 
