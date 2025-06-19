@@ -1,4 +1,5 @@
 import Database from "better-sqlite3";
+import { Model } from "../orm/Model";
 
 export class DatabaseWrapper {
   private db: Database.Database;
@@ -39,6 +40,7 @@ export class DatabaseWrapper {
       .join(", ");
 
     this.run(`CREATE TABLE IF NOT EXISTS ${tableName} (${columnsDefinition})`);
-    return this;
+
+    return new Model(tableName, this);
   }
 }
